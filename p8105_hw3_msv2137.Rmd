@@ -228,9 +228,25 @@ accel_data = read_csv("./data/accel_data.csv") %>%
 ## Description
 Describe the resulting dataset (e.g. what variables exist, how many observations, etc).
 
+## Table of Total Activity Per Day
 
+```{r}
+total_activity_per_day = accel_data %>%
+  mutate(day_id = recode(day, 
+                         "Monday" = 1, "Tuesday" = 2, "Wednesday" = 3, "Thursday" = 4, 
+                         "Friday" = 5, "Saturday" = 6, "Sunday" = 7)) %>%
+  mutate(day_id + 7 * (week - 1)) %>%
+  arrange(day_id) %>%
+  select(week, day_id, day, activity_count) %>%
+  group_by(week, day_id, day) %>%
+  summarize(total_activity = sum(activity_count))
 
-Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate accross minutes to create a total activity variable for each day, and create a table showing these totals. Are any trends apparent?
+knitr::kable(total_activity_per_day)
+```
+
+### Trends?
+Are any trends apparent?
+
 Accelerometer data allows the inspection activity over the course of the day. Make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week. Describe in words any patterns or conclusions you can make based on this graph.
 
 
