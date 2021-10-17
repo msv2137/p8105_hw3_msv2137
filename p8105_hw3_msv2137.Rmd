@@ -91,23 +91,17 @@ knitr::kable(three_most_popular)
 ### Pink Lady Apples and Coffee Ice Cream Table
 
 ```{r}
-days_of_week = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
-
 mean_hour_order = instacart %>%
   filter(product_name == "Pink Lady Apples" | product_name == "Coffee Ice Cream") %>%
-  select(product_name, order_dow, order_hour_of_day) %>%
   group_by(product_name, order_dow) %>%
   summarize(
     mean_hour = mean(order_hour_of_day)
   ) %>%
-  mutate(order_dow = days_of_week[order_dow + 1]) %>%
   pivot_wider(
     names_from = order_dow,
     values_from = mean_hour
   )
-knitr::kable(mean_hour_order, 
-             digit = 2, 
-             col.names = c("Product Name", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+knitr::kable(mean_hour_order)
 ```
 
 # Problem 2
