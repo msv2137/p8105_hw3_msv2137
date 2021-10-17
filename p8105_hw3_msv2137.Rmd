@@ -181,7 +181,7 @@ my_title = "Distribution of Data Values for Responses Among Locations in NY Stat
 two_panel_plot = two_panel_data %>%
   ggplot(aes(x = data_value, fill = response)) +
   geom_density() +
-  facet_grid(year~response) +
+  facet_grid(~year) +
   labs(title = str_wrap(my_title, 60), x = "Data Value")
 
 two_panel_plot
