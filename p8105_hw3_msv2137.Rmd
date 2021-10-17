@@ -231,22 +231,35 @@ Describe the resulting dataset (e.g. what variables exist, how many observations
 ## Table of Total Activity Per Day
 
 ```{r}
-total_activity_per_day = accel_data %>%
-  mutate(day_id = recode(day, 
-                         "Monday" = 1, "Tuesday" = 2, "Wednesday" = 3, "Thursday" = 4, 
-                         "Friday" = 5, "Saturday" = 6, "Sunday" = 7)) %>%
-  mutate(day_id + 7 * (week - 1)) %>%
-  arrange(day_id) %>%
-  select(week, day_id, day, activity_count) %>%
-  group_by(week, day_id, day) %>%
-  summarize(total_activity = sum(activity_count))
-
-knitr::kable(total_activity_per_day)
+accel_data %>%
+  mutate(day = forcats::fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))) %>%
+  group_by(week, day) %>%
+  summarize(
+    total_activity = mean(activity_count)
+  ) %>%
+  pivot_wider(
+    names_from = day,
+    values_from = total_activity
+    ) %>%
+  knitr::kable()
 ```
 
 ### Trends?
 Are any trends apparent?
 
-Accelerometer data allows the inspection activity over the course of the day. Make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week. Describe in words any patterns or conclusions you can make based on this graph.
+## Plot 24 Hr Activity for Each Day
 
+```{r}
+accel_data %>%
+  mutate(day = forcats::fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))) %>% 
+  ggplot(aes(x = minute, y = activity_count, color = day)) + 
+  geom_line() +
+  labs(
+    title = "Activity Over the Course of the Day",
+    x = "Minute",
+    y = "Activity"
+  )
+```
 
+### Analysis
+Describe in words any patterns or conclusions you can make based on this graph.
