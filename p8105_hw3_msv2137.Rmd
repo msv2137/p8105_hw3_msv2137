@@ -119,20 +119,26 @@ knitr::kable(mean_hour_order,
 
 # Problem 2
 
-This problem uses the BRFSS data. DO NOT include this dataset in your local data directory; instead, load the data from the p8105.datasets package.
-
+## Load Data
 ```{r}
 data("brfss_smart2010")
 
-View(brfss_smart2010)
+#View(brfss_smart2010)
 ```
 
-First, do some data cleaning:
+## Data Cleaning
+```{r}
+brfss_data = brfss_smart2010 %>%
+  janitor::clean_names() %>%
+  filter(topic == "Overall Health") %>%
+  mutate(response = factor(response, 
+                           levels = c("Poor", "Fair", "Good", "Very Good", "Excellent")))
 
-format the data to use appropriate variable names;
-focus on the “Overall Health” topic
-include only responses from “Excellent” to “Poor”
-organize responses as a factor taking levels ordered from “Poor” to “Excellent”
+View(brfss_data)
+```
+
+
+
 Using this dataset, do or answer the following (commenting on the results of each):
 
 In 2002, which states were observed at 7 or more locations? What about in 2010?
