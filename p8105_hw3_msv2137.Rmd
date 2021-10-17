@@ -80,7 +80,39 @@ aisle_plot = instacart %>%
 
 aisle_plot
 ```
+Add in explanation
 
+### Aisles Table
 
-Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
-Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
+```{r}
+three_most_popular = instacart %>%
+  filter(aisle == 'baking ingredients' | aisle == 'dog food care' | aisle == 'packaged vegetables fruits') %>%
+  group_by(aisle, product_name) %>%
+  summarize(
+    count = n()) %>%
+  top_n(3, count) %>%
+  arrange(aisle, desc(count), product_name)
+knitr::kable(three_most_popular)
+```
+
+### Pink Lady Apples and Coffee Ice Cream Table
+
+```{r}
+days_of_week = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+
+mean_hour_order = instacart %>%
+  filter(product_name == "Pink Lady Apples" | product_name == "Coffee Ice Cream") %>%
+  select(product_name, order_dow, order_hour_of_day) %>%
+  group_by(product_name, order_dow) %>%
+  summarize(
+    mean_hour = mean(order_hour_of_day)
+  ) %>%
+  mutate(order_dow = days_of_week[order_dow + 1]) %>%
+  pivot_wider(
+    names_from = order_dow,
+    values_from = mean_hour
+  )
+knitr::kable(mean_hour_order, 
+             digit = 2, 
+             col.names = c("Product Name", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+```
