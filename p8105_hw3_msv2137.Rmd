@@ -7,24 +7,47 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
 ```
 
-## R Markdown
+# Problem 1
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r}
+#load data
+library(p8105.datasets)
+data("instacart")
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+#View(instacart)
 ```
 
-## Including Plots
+## Description of Data
 
-You can also embed plots, for example:
+```{r}
+#understanding the dataset
+str(instacart)
+nrow(instacart)
+ncol(instacart)
+length(unique(instacart$user_id))
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+order_1 <- instacart[1,]
+
+order_1$order_id
+order_1$product_id
+order_1$add_to_cart_order
+order_1$product_name
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+The dataset `instacart` records online grocery orders from Instacart users.  It contains `r nrow(instacart)` observations from `r length(unique(instacart$user_id))` unique users. The dataset has `r nrow(instacart)` rows and `r ncol(instacart)` columns. Some key variables are as follows:
+
+* order_id: order identifier
+* product_id: product identifier
+* reordered: coded as 1 if this product has been ordered by the user in the past, 0 if otherwise
+* product_name: name of the product
+* order_number: the order sequence number for a user (1 = first, n = nth)
+* days_since_prior_order: days since the last order, but capped at 30 days (NA of order_number = 1)
+
+Let's take a look at a single row of data. In order `r order_1$order_id`, user `r order_1$user_id` ordered `r order_1$product_name` (product id = `r order_1$product_id`). The product is from the `r order_1$department` department, and was in the `r order_1$aisle` aisle. It was the `r order_1$add_to_cart_order`st product they added to their cart. This user has placed an order `r order_1$order_number` times before, and this product has been previously ordered by them (reordered = `r order_1$reordered`). The order was placed on a Thursday (order_dow = `r order_1$order_dow`), in the `r order_1$order_hour_of_day`th hour of the day (10am), and `r order_1$days_since_prior_order` days since the user last placed an Instacart order.  
+
+
+
