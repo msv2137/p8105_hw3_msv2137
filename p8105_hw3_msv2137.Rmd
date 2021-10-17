@@ -9,6 +9,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(dplyr)
+library(ggplot2)
 ```
 
 # Problem 1
@@ -50,13 +51,13 @@ The dataset `instacart` records online grocery orders from Instacart users.  It 
 Let's take a look at a single row of data. In order `r order_1$order_id`, user `r order_1$user_id` ordered `r order_1$product_name` (product id = `r order_1$product_id`). The product is from the `r order_1$department` department, and was in the `r order_1$aisle` aisle. It was the `r order_1$add_to_cart_order`st product they added to their cart. This user has placed an order `r order_1$order_number` times before, and this product has been previously ordered by them (reordered = `r order_1$reordered`). The order was placed on a Thursday (order_dow = `r order_1$order_dow`), in the `r order_1$order_hour_of_day`th hour of the day (10am), and `r order_1$days_since_prior_order` days since the user last placed an Instacart order.  
 
 ### Aisles
-How many aisles are there, and which aisles are the most items ordered from?
+
 ```{r}
-aisle_data = instacart %>% 
+aisle_number = instacart %>% 
   distinct(aisle) %>% 
   nrow()
 ```
-There are `r aisle_data` aisles.
+There are `r aisle_number` aisles.
 
 ```{r}
 most_items_aisle = instacart %>% 
@@ -68,7 +69,18 @@ most_items_aisle = instacart %>%
 
 The `r most_items_aisle$aisle[1]` aisle, is where the most items have been ordered from. The `r most_items_aisle$aisle[2]` aisle, is where the second most items have been ordered from. The `r most_items_aisle$aisle[3]` aisle, is where the third most items have been ordered from. 
 
+### Aisles Plot
 
-Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.
+```{r}
+aisle_plot = instacart %>%
+  count(aisle) %>%
+  mutate(aisle = fct_reorder(aisle, desc(n))) %>%
+  filter(n > 10000) %>%
+  ggplot(aes(x = aisle, y = n)) + geom_point() + labs(title = "Number of Items Ordered in Each Aisle", x = "Aisle", y = "Number of Items") + theme(axis.text.x = element_text(angle = 90, size = rel(1), hjust = 1))
+
+aisle_plot
+```
+
+
 Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
 Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
