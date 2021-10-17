@@ -29,7 +29,9 @@ data("instacart")
 str(instacart)
 nrow(instacart)
 ncol(instacart)
-length(unique(instacart$user_id))
+
+#subsetting to the row of data to examine the variables
+order_1 <- instacart[1,]
 ```
 
 The dataset `instacart` records online grocery orders from Instacart users.  It contains `r nrow(instacart)` observations from `r length(unique(instacart$user_id))` unique users. The dataset has `r nrow(instacart)` rows and `r ncol(instacart)` columns. Some key variables are as follows:
