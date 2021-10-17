@@ -30,13 +30,6 @@ str(instacart)
 nrow(instacart)
 ncol(instacart)
 length(unique(instacart$user_id))
-
-order_1 <- instacart[1,]
-
-order_1$order_id
-order_1$product_id
-order_1$add_to_cart_order
-order_1$product_name
 ```
 
 The dataset `instacart` records online grocery orders from Instacart users.  It contains `r nrow(instacart)` observations from `r length(unique(instacart$user_id))` unique users. The dataset has `r nrow(instacart)` rows and `r ncol(instacart)` columns. Some key variables are as follows:
@@ -80,6 +73,7 @@ aisle_plot = instacart %>%
 
 aisle_plot
 ```
+
 Add in explanation
 
 ### Aisles Table
