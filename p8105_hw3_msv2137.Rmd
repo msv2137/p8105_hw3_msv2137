@@ -180,7 +180,7 @@ two_panel_data = brfss_data %>%
 my_title = "Distribution of Data Values for Responses Among Locations in NY State in 2006 and 2010"
 two_panel_plot = two_panel_data %>%
   ggplot(aes(x = data_value, fill = response)) +
-  geom_density() +
+  geom_density(alpha = .4, adjust = .5, color = "blue") +
   facet_grid(~year) +
   labs(title = str_wrap(my_title, 60), x = "Data Value")
 
