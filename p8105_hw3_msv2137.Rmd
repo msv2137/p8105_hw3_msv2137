@@ -67,14 +67,12 @@ The `r most_items_aisle$aisle[1]` aisle, is where the most items have been order
 ```{r}
 aisle_plot = instacart %>%
   count(aisle) %>%
-  mutate(aisle = fct_reorder(aisle, desc(n))) %>%
+  mutate(aisle = fct_reorder(aisle, n)) %>%
   filter(n > 10000) %>%
   ggplot(aes(x = aisle, y = n)) + geom_point() + labs(title = "Number of Items Ordered in Each Aisle", x = "Aisle", y = "Number of Items") + theme(axis.text.x = element_text(angle = 90, size = rel(1), hjust = 1))
 
 aisle_plot
 ```
-
-Add in explanation
 
 ### Aisles Table
 
@@ -172,8 +170,6 @@ excellent_plot = excellent_data %>%
 excellent_plot
 ```
 
-Add explanation
-
 ## Two Panel Plot
 
 ```{r}
@@ -197,14 +193,13 @@ two_panel_plot = two_panel_data %>%
 two_panel_plot
 ```
 
-Add explanation
-
 # Problem 3
 
 ## Load, Tidy and Wrangle Data
 ```{r}
-accel_data = read_csv("./data/accel_data.csv")
-View(accel_data)
+#accel_data = read_csv("./data/accel_data.csv")
+#View(accel_data)
+
 accel_data = read_csv("./data/accel_data.csv") %>%
   janitor::clean_names() %>%
   pivot_longer(
@@ -220,7 +215,8 @@ accel_data = read_csv("./data/accel_data.csv") %>%
 ```
 
 ## Description
-Describe the resulting dataset (e.g. what variables exist, how many observations, etc).
+
+In the accelometer dataset, there are `r nrow(accel_data)` rows and `r ncol(accel_data)` columns. Some variables that exist are the week number (week), the day id (day_id), the day of the week (day), the minute of the day (minute), the activity levels recorded in each minute of the day (activity_count), and a variable that distiguishes weekdays from weekends (weekday).
 
 ## Table of Total Activity Per Day
 
