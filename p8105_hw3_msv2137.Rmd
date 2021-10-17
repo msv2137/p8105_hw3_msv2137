@@ -59,7 +59,6 @@ most_items_aisle = instacart %>%
   count(aisle) %>% 
   arrange(desc(n)) %>%
   top_n(3)
-
 ```
 
 The `r most_items_aisle$aisle[1]` aisle, is where the most items have been ordered from. The `r most_items_aisle$aisle[2]` aisle, is where the second most items have been ordered from. The `r most_items_aisle$aisle[3]` aisle, is where the third most items have been ordered from. 
@@ -184,13 +183,12 @@ two_panel_data = brfss_data %>%
   group_by(response) 
 
 #make plot
+my_title = "Distribution of Data Values for Responses Among Locations in NY State in 2006 and 2010"
 two_panel_plot = two_panel_data %>%
   ggplot(aes(x = data_value, fill = response)) +
   geom_density() +
   facet_grid(year~response) +
-  labs(
-    title = "Distribution of Data Values for Responses Among Locations in NY State in 2006 and 2010", 
-    x = "Data Value")
+  labs(title = str_wrap(my_title, 60), x = "Data Value")
 
 two_panel_plot
 ```
@@ -227,7 +225,7 @@ accel_data %>%
   mutate(day = forcats::fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))) %>%
   group_by(week, day) %>%
   summarize(
-    total_activity = mean(activity_count)
+    total_activity = sum(activity_count)
   ) %>%
   pivot_wider(
     names_from = day,
@@ -237,7 +235,27 @@ accel_data %>%
 ```
 
 ### Trends?
-Are any trends apparent?
+
+To investigate trends let's group activity level by day of the week
+```{r}
+level_by_day = accel_data %>%
+  group_by(day) %>%
+  summarize(total_activity = sum(activity_count))
+
+knitr::kable(level_by_day)
+```
+
+We can also group activity level by week
+```{r}
+level_by_week = accel_data %>%
+  group_by(week) %>%
+  summarize(total_activity = sum(activity_count))
+
+knitr::kable(level_by_week)
+```
+
+From our investigation, we can see that activity levels are highest on Fridays and Wednesdays, and lowest on Saturdays and Tuesdays. In our second table, we also see that activity levels were the highest in Week 2 and lowest in Week 4.
+
 
 ## Plot 24 Hr Activity for Each Day
 
