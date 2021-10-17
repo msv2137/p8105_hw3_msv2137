@@ -178,4 +178,29 @@ excellent_plot = excellent_data %>%
 excellent_plot
 ```
 
-Make a two-panel plot showing, for the years 2006, and 2010, distribution of data_value for responses (“Poor” to “Excellent”) among locations in NY State
+Add explanation
+
+## Two Panel Plot
+
+```{r}
+#make dataset
+two_panel_data = brfss_data %>%
+  drop_na(response) %>%
+  filter(locationabbr == "NY") %>%
+  filter(year == 2006 | year == 2010) %>%
+  select(year, locationabbr, locationdesc, data_value, response) %>%
+  group_by(response) 
+
+#make plot
+two_panel_plot = two_panel_data %>%
+  ggplot(aes(x = data_value, fill = response)) +
+  geom_density() +
+  facet_grid(year~response) +
+  labs(
+    title = "Distribution of Data Values for Responses Among Locations in NY State in 2006 and 2010", 
+    x = "Data Value")
+
+two_panel_plot
+```
+
+
