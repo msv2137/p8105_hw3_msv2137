@@ -255,10 +255,10 @@ From our investigation, we can see that activity levels are highest on Fridays a
 
 ```{r}
 accel_data %>%
-  mutate(day = forcats::fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))) %>% 
-  ggplot(aes(x = minute, y = activity_count, color = day)) + 
+  mutate(day = forcats::fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))) %>%
+  ggplot(aes(x = minute, y = activity_count, color = day, group = day_id)) + 
   geom_line() +
-  labs(
+   labs(
     title = "Activity Over the Course of the Day",
     x = "Minute",
     y = "Activity"
@@ -266,6 +266,6 @@ accel_data %>%
 ```
 
 ### Analysis
-Several observations can be made from this graph. On all days of the week, activity in lower during the first ~300 minutes of the day, as well as the last ~150 minutes of the day. A possible explanation for this is that the patient may be sleeping during these times.
+Several observations can be made from this graph. On all days of the week, activity was lower during the first ~300 minutes of the day, as well as the last ~150 minutes of the day. A possible explanation for this is that the patient may be sleeping during these times.
 
-On certain days, the patient has different spikes in activity. On Friday, the patient's activity is higher overall in the night and it runs longer into the night than on other days. On Sundays, the patient's peak activity occurs around minute 850 approximately. On Thursdays, there is a spike in activity around minute 350 approximately.
+On certain days, the patient has different spikes in activity. On Fridays, the patient's activity is higher overall in the night and it runs longer into the night than on other days. On Sundays, the patient's peak activity occurs around minute 700 approximately. On Thursdays, there is a spike in activity around minute 400 approximately.
