@@ -129,10 +129,10 @@ brfss_data = brfss_smart2010 %>%
   janitor::clean_names() %>% #clean up variable names
   filter(topic == "Overall Health") %>% #focus on overall health topic
   mutate(response = factor(response, 
-                           levels = c("Poor", "Fair", "Good", "Very Good", "Excellent"))) #include only responses from excellent to poor
+                           levels = c("Poor", "Fair", "Good", "Very good", "Excellent"))) #include only responses from excellent to poor
 
 #take a look at the cleaned data
-#View(brfss_data)
+View(brfss_data)
 ```
 
 ## 7 or more loactions
