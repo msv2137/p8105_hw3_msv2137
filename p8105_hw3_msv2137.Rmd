@@ -132,7 +132,7 @@ brfss_data = brfss_smart2010 %>%
                            levels = c("Poor", "Fair", "Good", "Very good", "Excellent"))) #include only responses from excellent to poor
 
 #take a look at the cleaned data
-View(brfss_data)
+#View(brfss_data)
 ```
 
 ## 7 or more loactions
