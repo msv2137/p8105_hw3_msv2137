@@ -1,12 +1,13 @@
 ---
 title: "HW 3"
 author: "Malvika Venkataraman"
-date: "10/17/2021"
+date: "10/18/2021"
 output: github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+#load libraries needed
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
@@ -19,18 +20,19 @@ library(ggplot2)
 library(p8105.datasets)
 data("instacart")
 
+#take a look at the data
 #View(instacart)
 ```
 
 ## Description of Data
 
 ```{r}
-#understanding the dataset
+#understand the dataset
 str(instacart)
 nrow(instacart)
 ncol(instacart)
 
-#subsetting to the row of data to examine the variables
+#subset to a row of data to examine the variables
 order_1 <- instacart[1,]
 ```
 
@@ -45,9 +47,10 @@ The dataset `instacart` records online grocery orders from Instacart users.  It 
 
 Let's take a look at a single row of data. In order `r order_1$order_id`, user `r order_1$user_id` ordered `r order_1$product_name` (product id = `r order_1$product_id`). The product is from the `r order_1$department` department, and was in the `r order_1$aisle` aisle. It was the `r order_1$add_to_cart_order`st product they added to their cart. This user has placed an order `r order_1$order_number` times before, and this product has been previously ordered by them (reordered = `r order_1$reordered`). The order was placed on a Thursday (order_dow = `r order_1$order_dow`), in the `r order_1$order_hour_of_day`th hour of the day (10am), and `r order_1$days_since_prior_order` days since the user last placed an Instacart order.  
 
-### Aisles
+## Aisles
 
 ```{r}
+#calculate number of distinct aisles
 aisle_number = instacart %>% 
   distinct(aisle) %>% 
   nrow()
@@ -55,6 +58,7 @@ aisle_number = instacart %>%
 There are `r aisle_number` aisles.
 
 ```{r}
+#calculate top 3 aisles in terms of most items ordered
 most_items_aisle = instacart %>% 
   count(aisle) %>% 
   arrange(desc(n)) %>%
@@ -63,21 +67,23 @@ most_items_aisle = instacart %>%
 
 The `r most_items_aisle$aisle[1]` aisle, is where the most items have been ordered from. The `r most_items_aisle$aisle[2]` aisle, is where the second most items have been ordered from. The `r most_items_aisle$aisle[3]` aisle, is where the third most items have been ordered from. 
 
-### Aisles Plot
+## Aisles Plot
 
 ```{r}
+#Mplot that shows the number of items ordered in each aisle
 aisle_plot = instacart %>%
   count(aisle) %>%
   mutate(aisle = fct_reorder(aisle, n)) %>%
-  filter(n > 10000) %>%
+  filter(n > 10000) %>% #limit to aisles with more than 10000 items ordered
   ggplot(aes(x = aisle, y = n)) + geom_point() + labs(title = "Number of Items Ordered in Each Aisle", x = "Aisle", y = "Number of Items") + theme(axis.text.x = element_text(angle = 90, size = rel(1), hjust = 1))
 
 aisle_plot
 ```
 
-### Aisles Table
+## Aisles Table
 
 ```{r}
+#make table showing the three most popular items in each of three specific aisles
 three_most_popular = instacart %>%
   filter(aisle == 'baking ingredients' | aisle == 'dog food care' | aisle == 'packaged vegetables fruits') %>%
   group_by(aisle, product_name) %>%
@@ -88,9 +94,10 @@ three_most_popular = instacart %>%
 knitr::kable(three_most_popular)
 ```
 
-### Pink Lady Apples and Coffee Ice Cream Table
+## Pink Lady Apples and Coffee Ice Cream Table
 
 ```{r}
+#make table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week
 mean_hour_order = instacart %>%
   filter(product_name == "Pink Lady Apples" | product_name == "Coffee Ice Cream") %>%
   group_by(product_name, order_dow) %>%
@@ -108,24 +115,29 @@ knitr::kable(mean_hour_order)
 
 ## Load Data
 ```{r}
+#load data
 data("brfss_smart2010")
 
+#take a look at dataset
 #View(brfss_smart2010)
 ```
 
 ## Data Cleaning
 ```{r}
+#clean the data
 brfss_data = brfss_smart2010 %>%
-  janitor::clean_names() %>%
-  filter(topic == "Overall Health") %>%
+  janitor::clean_names() %>% #clean up variable names
+  filter(topic == "Overall Health") %>% #focus on overall health topic
   mutate(response = factor(response, 
-                           levels = c("Poor", "Fair", "Good", "Very Good", "Excellent")))
+                           levels = c("Poor", "Fair", "Good", "Very Good", "Excellent"))) #include only responses from excellent to poor
 
+#take a look at the cleaned data
 #View(brfss_data)
 ```
 
 ## 7 or more loactions
 ```{r}
+#find states observed at 7 or more locations in 2002
 states_2002 = brfss_data %>%
   filter(year == 2002) %>%
   group_by(locationabbr) %>%
@@ -134,6 +146,7 @@ states_2002 = brfss_data %>%
   filter(num_loc > 6) %>%
   pull(locationabbr)
 
+#find states observed at 7 or more locations in 2010
 states_2010 = brfss_data %>%
   filter(year == 2010) %>%
   group_by(locationabbr) %>%
@@ -151,10 +164,10 @@ The states: `r states_2002` were observed at 7 or more locations in 2002. The st
 ```{r}
 #construct the dataset
 excellent_data = brfss_data %>%
-  filter(response == "Excellent") %>%
-  select(year, locationabbr, data_value) %>%
+  filter(response == "Excellent") %>% #limit only to excellent responses
+  select(year, locationabbr, data_value) %>% #contains year, state, and 
   group_by(year, locationabbr) %>%
-  summarise(mean_value = mean(data_value, na.rm = T))
+  summarise(mean_value = mean(data_value, na.rm = T)) #value that averages the data_value across locations within a state
 ```
 
 ```{r}
@@ -180,8 +193,8 @@ two_panel_data = brfss_data %>%
 my_title = "Distribution of Data Values for Responses Among Locations in NY State in 2006 and 2010"
 two_panel_plot = two_panel_data %>%
   ggplot(aes(x = data_value, fill = response)) +
-  geom_density(alpha = .4, adjust = .5, color = "blue") +
-  facet_grid(~year) +
+  geom_density(alpha = .4, adjust = .5, color = "blue") + #adjust plot aesthetics to make more readable
+  facet_grid(~year) + #two panels - one for each year
   labs(title = str_wrap(my_title, 60), x = "Data Value")
 
 two_panel_plot
@@ -191,11 +204,8 @@ two_panel_plot
 
 ## Load, Tidy and Wrangle Data
 ```{r}
-#accel_data = read_csv("./data/accel_data.csv")
-#View(accel_data)
-
 accel_data = read_csv("./data/accel_data.csv") %>%
-  janitor::clean_names() %>%
+  janitor::clean_names() %>% #clean up variable names
   pivot_longer(
     activity_1:activity_1440,
     names_to = "minute",
@@ -203,7 +213,7 @@ accel_data = read_csv("./data/accel_data.csv") %>%
     values_to = "activity_count"
   ) %>%
   mutate(
-    weekday = ifelse(day == "Saturday" | day == "Sunday", "weekend", "weekday"),
+    weekday = ifelse(day == "Saturday" | day == "Sunday", "weekend", "weekday"), #make a variable that distinguishes between weekends and weekdays
     minute = as.numeric(minute)
   )
 ```
@@ -219,13 +229,13 @@ accel_data %>%
   mutate(day = forcats::fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))) %>%
   group_by(week, day) %>%
   summarize(
-    total_activity = sum(activity_count)
+    total_activity = sum(activity_count) #aggregate across minutes to create a total activity variable for each day
   ) %>%
   pivot_wider(
     names_from = day,
     values_from = total_activity
     ) %>%
-  knitr::kable()
+  knitr::kable() #create a table showing the totals
 ```
 
 ### Trends?
@@ -254,9 +264,10 @@ From our investigation, we can see that activity levels are highest on Fridays a
 ## Plot 24 Hr Activity for Each Day
 
 ```{r}
+#plot the 24-hour activity time courses for each day
 accel_data %>%
   mutate(day = forcats::fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))) %>%
-  ggplot(aes(x = minute, y = activity_count, color = day, group = day_id)) + 
+  ggplot(aes(x = minute, y = activity_count, color = day, group = day_id)) + #color indicates day of the week
   geom_line() +
    labs(
     title = "Activity Over the Course of the Day",
